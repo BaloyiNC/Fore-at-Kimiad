@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — FORE at Kimiad</title>
+<meta name="description" content="Get in touch with FORE at Kimiad, Moreleta Park — hours, phone, email, and directions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="topbar-links">
+      <a href="tel:0878221857">087 822 1857</a>
+      <a href="https://www.google.com/maps/place/711+Wekker+Road,+Moreleta+Park">711 Wekker Road, Moreleta Park</a>
+    </div>
+    <div class="topbar-links">
+      <a href="contact.html#order">Order delivery</a>
+      <a href="contact.html">Book a table</a>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img class="brand-mark" src="images/logo.png" alt="FORE at Kimiad logo">
+      <span class="brand-name">FORE <span>@ Kimiad</span></span>
+    </a>
+    <ul class="navlinks">
+      <li><a href="index.html">Home</a></li>
+<li><a href="menu.html">Menu</a></li>
+<li><a href="specials.html">Specials</a></li>
+<li><a href="functions.html">Functions</a></li>
+<li><a href="gallery.html">Gallery</a></li>
+<li><a href="contact.html" class="active">Contact</a></li>
+
+    </ul>
+    <a class="nav-cta" href="contact.html#order">Order now</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="wrap">
+    <div class="eyebrow">We'd love to have you</div>
+    <h1>Contact &amp; Location</h1>
+    <p>Book a table, ask about functions, or just find out today's hours.</p>
+  </div>
+</div>
+
+<section class="info">
+  <div class="wrap">
+    <div>
+      <div class="info-card">
+        <h3 style="margin-bottom:16px;">Send us a message</h3>
+        <form class="contact-form" onsubmit="event.preventDefault(); alert('This is a design demo — hook this form up to your email or a form service like Formspree to go live.');">
+          <div>
+            <label for="name">Name</label>
+            <input id="name" type="text" placeholder="Your name" required>
+          </div>
+          <div>
+            <label for="phone">Phone or email</label>
+            <input id="phone" type="text" placeholder="087 000 0000 or you@email.com" required>
+          </div>
+          <div>
+            <label for="reason">What's this about?</label>
+            <select id="reason">
+              <option>Booking a table</option>
+              <option>Function / event enquiry</option>
+              <option>Weekly specials by WhatsApp</option>
+              <option>General question</option>
+            </select>
+          </div>
+          <div>
+            <label for="message">Message</label>
+            <textarea id="message" placeholder="Tell us the date, group size, or your question"></textarea>
+          </div>
+          <button class="btn btn-rust" type="submit" style="align-self:flex-start;">Send message</button>
+        </form>
+      </div>
+    </div>
+    <div>
+      <div class="info-card" style="margin-bottom:20px;">
+        <table class="hours">
+          <tr><td>Monday &ndash; Saturday</td><td>09:30 &ndash; 20:30</td></tr>
+          <tr><td>Sunday</td><td>09:30 &ndash; 18:00</td></tr>
+        </table>
+        <div class="contact-row"><div class="contact-ico">&#9742;</div><a href="tel:0878221857">087 822 1857</a></div>
+        <div class="contact-row"><div class="contact-ico">&#9993;</div><a href="mailto:info@foreatkimiad.co.za">info@foreatkimiad.co.za</a></div>
+        <div class="contact-row"><div class="contact-ico">&#128205;</div><span>711 Wekker Road, Moreleta Park, Pretoria</span></div>
+      </div>
+      <div class="map-block" id="order">
+        <div style="font-family:'Fraunces',serif;font-size:18px;color:var(--green);">Order for delivery or collection</div>
+        <p style="margin:0;max-width:280px;">Live map embed goes here once you supply your Google Maps place link.</p>
+        <div style="display:flex;gap:10px;">
+          <a href="https://www.mrdfood.com/" class="btn btn-mrd">Mr D Food</a>
+          <a href="https://www.ubereats.com/za" class="btn btn-green">Uber Eats</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>&copy; <span id="year"></span> FORE at Kimiad &middot; Kimiad Golf Course, 711 Wekker Road, Moreleta Park, Pretoria</div>
+    <div>Site by <a href="https://baloyi.netlify.app/" target="_blank" rel="noopener noreferrer" style="color:var(--white);">Bee_Shotss</a></div>
+    <div class="foot-social">
+      <a href="http://facebook.com/ForeKimiad">Facebook</a>
+      <a href="http://www.instagram.com/fore_at_kimiad/">Instagram</a>
+    </div>
+  </div>
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

@@ -1,0 +1,315 @@
+import json, os
+
+OUT = "/home/claude/site"
+
+HEAD = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{title}</title>
+<meta name="description" content="{desc}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+"""
+
+def topbar():
+    return """
+<div class="topbar">
+  <div class="wrap">
+    <div class="topbar-links">
+      <a href="tel:0878221857">087 822 1857</a>
+      <a href="https://www.google.com/maps/place/711+Wekker+Road,+Moreleta+Park">711 Wekker Road, Moreleta Park</a>
+    </div>
+    <div class="topbar-links">
+      <a href="contact.html#order">Order delivery</a>
+      <a href="contact.html">Book a table</a>
+    </div>
+  </div>
+</div>
+"""
+
+def nav(active):
+    links = [("index.html","Home"),("menu.html","Menu"),("specials.html","Specials"),
+             ("functions.html","Functions"),("gallery.html","Gallery"),("contact.html","Contact")]
+    items = ""
+    for href, label in links:
+        cls = ' class="active"' if href == active else ""
+        items += f'<li><a href="{href}"{cls}>{label}</a></li>\n'
+    return f"""
+<nav>
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img class="brand-mark" src="images/logo.png" alt="FORE at Kimiad logo">
+      <span class="brand-name">FORE <span>@ Kimiad</span></span>
+    </a>
+    <ul class="navlinks">
+      {items}
+    </ul>
+    <a class="nav-cta" href="contact.html#order">Order now</a>
+  </div>
+</nav>
+"""
+
+def footer():
+    return """
+<footer>
+  <div class="wrap">
+    <div>&copy; FORE at Kimiad &middot; Kimiad Golf Course, 711 Wekker Road, Moreleta Park, Pretoria</div>
+    <div class="foot-social">
+      <a href="http://facebook.com/ForeKimiad">Facebook</a>
+      <a href="http://www.instagram.com/fore_at_kimiad/">Instagram</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
+"""
+
+def page(title, desc, active, body):
+    return HEAD.format(title=title, desc=desc) + topbar() + nav(active) + body + footer()
+
+def write(name, html):
+    with open(os.path.join(OUT, name), "w", encoding="utf-8") as f:
+        f.write(html)
+
+# ---------------------------------------------------------------
+# MENU DATA (transcribed from the March 2026 menu photos)
+# ---------------------------------------------------------------
+MENU = [
+  {"key":"breakfast","name":"Breakfast","served":"Served until 12pm daily.",
+   "groups":[
+     {"head":None,"items":[
+        {"n":"'Fore' Brekkie","p":"R72","d":"2 eggs, a grilled tomato, 2 rashers of bacon with fries and 2 slices of toast with butter & jam."},
+        {"n":"Big Easy Brekkie","p":"R97","d":"2 eggs, a grilled tomato, cheese griller, hash brown, 2 rashers of bacon, fries and 2 slices of toast with butter & jam."},
+        {"n":"Albatros Brekkie","p":"R85","d":"Mild peri chicken livers served on 2 slices of toast with 2 eggs on top."},
+        {"n":"Mince & Egg on Toast","p":"R73","d":"160g of BBQ cooked mince, egg and one slice of toast. Add slice of cheese +R10.50."},
+        {"n":"Carb Conscious Brekkie","p":"R81","d":"3 eggs, 2 rashers of bacon, grilled tomato, & boerewors."},
+        {"n":"French Toast, Honey & Bacon","p":"R74","d":"2 slices of bread dipped in egg/milk mix, then cooked. Topped with honey and 4 rashers of bacon."},
+        {"n":"Hash Brown Brekkie","p":"R78","d":"2 eggs, 2 rashers bacon, fries, grilled tomato & 2 hash browns."},
+     ]},
+     {"head":"Toasted Sandwiches","note":"Choice of white or brown bread, served with a portion of fries.","items":[
+        {"n":"Chicken Mayo","p":"R52"},
+        {"n":"Bacon, Egg and Cheese","p":"R58"},
+        {"n":"Cheese & Tomato","p":"R43"},
+        {"n":"Ham, Cheese & Tomato","p":"R49"},
+        {"n":"Big Boss (Chicken Mayo, Bacon & Cheese)","p":"R67"},
+     ]},
+     {"head":"Breakfast Top-Ups","items":[
+        {"n":"Cheese Griller","p":"R21"},{"n":"Boerewors","p":"R25"},{"n":"Egg","p":"R5.50"},
+        {"n":"Slice of cheddar cheese","p":"R10.50"},{"n":"Bacon","p":"R21"},{"n":"Hash Brown","p":"R15"},
+     ]},
+   ]},
+  {"key":"starters","name":"Starters & Light Meals","served":None,
+   "groups":[{"head":None,"items":[
+        {"n":"Chicken Strips","p":"R81","d":"Chicken strips served on a bed of shoestring fries and sweet chilli sauce. Add cheese sauce +R23."},
+        {"n":"Cheesy Garlic Prawns","p":"R85","d":"Cocktail prawns mixed in a cheesy garlic sauce and topped with melted cheese. Served with bread."},
+        {"n":"Focaccia Bread","p":"R44","d":"Flatbread topped with garlic olive oil and origanum. Add feta cheese +R15."},
+        {"n":"Trinchado","p":"R82","d":"Beef strips cooked in a creamy peri-peri sauce. Served with focaccia bread.","t":["Spicy"]},
+        {"n":"Biltong Fries","p":"R89","d":"300g shoestring fries, smothered with cheese sauce, secret spice and biltong shavings."},
+        {"n":"Cheese Belly Fries","p":"R86","d":"Shoestring fries, smothered with cheese sauce & crispy pork belly cubes."},
+        {"n":"Peri-Peri Chicken Livers","p":"R79","d":"Chicken livers, onions, and bacon in a peri-peri sauce. Served with focaccia bread or mash.","t":["Spicy"]},
+        {"n":"Chicken Salad","p":"R81","d":"Basic salad, topped with grilled chicken strips and feta cheese."},
+        {"n":"Crumbed Mushrooms","p":"R87","d":"Generous portion of fresh mushrooms covered with crunchy panko crumbs, served with Fore sauce.","t":["Veg"]},
+        {"n":"Cheesy Garlic Snails","p":"R84","d":"Served with a generous portion of cheese, garlic butter and brown bread."},
+        {"n":"Calamari Starter","p":"R89","d":"120g of panko crumbed calamari strips served with our famous Fore sauce and a portion of fries."},
+        {"n":"Pork Tjop & Mash","p":"R79","d":"Succulent pork tjop, served with mash and a hearty sauce."},
+   ]}]},
+  {"key":"baskets","name":"Baskets & Platters","served":"Please allow 25 min preparation time during busy periods.",
+   "groups":[
+     {"head":None,"items":[
+        {"n":"Fore Platter","p":"R446","d":"Ribs, panko crumbed chicken strips, viennas, toasted cheese triangles, mini cheese grillers, 4 hash browns, 5 onion rings, crispy pork belly cubes, short rib, 4 chicken wings, fries, cheese & BBQ sauce."},
+        {"n":"John Daily Platter","p":"R479","d":"Crumbed chicken strips, viennas, toasted cheese triangles, 2 stuffed cream cheese jalapeños, 4 stuffed jalapeño cheese balls, mini cheese grillers, crispy pork belly cubes, chicken nuggets, 4 cheese samosas, 5 onion rings, short rib, mini focaccia, fries, cheese & BBQ sauce."},
+        {"n":"Basket 1","p":"R154","d":"Panko crumbed chicken strips, 2 stuffed jalapeño cheese balls, mini cheese grillers, fries, and sweet chilli mayo sauce."},
+        {"n":"Basket 2","p":"R146","d":"4 cheese samosas, mini cheese grillers, crumbed chicken strips, fries, and sweet chilli mayo sauce."},
+        {"n":"Basket 3","p":"R177","d":"Crispy pork belly cubes, panko crumbed chicken strips, crumbed mushrooms, mini cheese grillers, fries, and sweet chilli mayo sauce."},
+        {"n":"Basket 4","p":"R198","d":"Chicken nuggets, short rib, 4 chicken wings, cocktail cheese grillers, fries, and sweet chilli mayo sauce."},
+     ]},
+     {"head":"Add-ons","items":[
+        {"n":"4 Samosas","p":"R24"},{"n":"Hashbrown","p":"R15"},{"n":"5 Onion Rings","p":"R22"},
+        {"n":"Viennas","p":"R22"},{"n":"4 Crumbed Chicken Wings","p":"R39"},{"n":"150g Short Rib","p":"R32"},
+     ]},
+   ]},
+  {"key":"burgers","name":"Burgers","served":"All burgers served with shoestring fries, a basic side salad, mash or roasted veggies. Chicken option available on request.",
+   "groups":[
+     {"head":None,"items":[
+        {"n":"Plain Par","p":"R93","d":"160g pure beef burger with Fore sauce."},
+        {"n":"Cheese Burger","p":"R99 / R91","d":"Beef R99 &middot; Chicken R91.","t":["New"]},
+        {"n":"Bag Rat a.k.a. 'The Caddie'","p":"R122","d":"Pure beef burger, Fore sauce, guacamole, bacon & a slice of cheddar cheese."},
+        {"n":"Flop Shot","p":"R119","d":"Pure beef burger, Fore sauce, 2 bacon slices, a slice of cheddar cheese, and caramelised onions."},
+        {"n":"The Shank","p":"R114","d":"Pure beef burger, Fore sauce, 2 bacon slices, a slice of cheddar cheese."},
+        {"n":"The Links","p":"R115","d":"Panko crumbed chicken breast, 2 bacon slices, a slice of cheese and feta cheese."},
+        {"n":"Texas Wedge","p":"R129","d":"Pure beef burger, Fore sauce, 2 bacon slices, and 2 crumbed jalapeño cheese balls.","t":["Spicy"]},
+        {"n":"Happy Gilmore","p":"R148","d":"2 pure beef patties, Fore sauce, a slice of cheddar cheese, 2 slices bacon, and feta cheese."},
+        {"n":"Assorted Cheese Sliders","p":"R140","d":"2 mini cheese beef and 2 mini cheese chicken burgers.","t":["New"]},
+     ]},
+     {"head":"Burger Top-Ups","items":[
+        {"n":"Double-up with extra burger patty","p":"R35"},{"n":"Slice of cheddar cheese","p":"R10.50"},
+        {"n":"2 rashers of bacon","p":"R21"},{"n":"Feta cheese","p":"R16"},{"n":"Egg","p":"R5.50"},
+     ]},
+   ]},
+  {"key":"mains","name":"Mains","served":"Served with shoestring fries, a basic side salad, mash or roasted veggies.",
+   "groups":[
+     {"head":None,"items":[
+        {"n":"400g T-bone","p":"R185","d":"AAA-grade, 21-day matured and grilled to perfection."},
+        {"n":"Eisbein","p":"R189","d":"Man sized eisbein, oven roasted with olive oil and fresh rosemary, served with sauerkraut and sweet Dijon mustard. Allow 25 min prep time."},
+        {"n":"250g Sirloin Steak","p":"R133","d":"AAA-grade, 21-day matured and grilled to perfection."},
+        {"n":"400g Ribs","p":"R148","d":"Marinated pork ribs, grilled to perfection."},
+        {"n":"Chicken Schnitzel","p":"R121","d":"2 panko crumbed chicken fillets, and your choice of cheese or mushroom sauce."},
+        {"n":"'Ringer' Schnitzel","p":"R138","d":"2 panko crumbed chicken fillets, 2 slices of cheddar cheese, and your choice of cheese or mushroom sauce."},
+        {"n":"Cheesy Prawn Schnitzel","p":"R145","d":"2 panko crumbed chicken fillets, topped with a delicious cheesy prawn sauce."},
+        {"n":"Beer Battered Hake","p":"R116","d":"Hake fillet covered with the secret coating and Fore sauce."},
+        {"n":"Fore Steak","p":"R143","d":"21-day matured 200g sirloin steak, topped with a slice of cheddar cheese and mushroom sauce."},
+        {"n":"Cheesy Prawn Steak","p":"R154","d":"21-day matured 200g sirloin steak, topped with a cheesy prawn sauce."},
+        {"n":"Meaty Mixed Grill","p":"R174","d":"21-day matured 200g sirloin steak, boerewors, with 2 slices of pork belly."},
+        {"n":"Steak & Wings","p":"R164","d":"21-day matured 200g sirloin steak & 4 crumbed chicken wings.","t":["New"]},
+        {"n":"250g Pork Neck Steak","p":"R119","d":"Succulent and juicy, grilled to perfection.","t":["New"]},
+     ]},
+     {"head":"Sauces and Extras","items":[
+        {"n":"Cheese Sauce","p":"R23"},{"n":"Mushroom Sauce","p":"R23"},{"n":"Cheesy-Garlic Sauce","p":"R23"},
+        {"n":"Cheesy Jalapeño Sauce","p":"R23"},{"n":"Cheese Slice","p":"R10.50"},{"n":"Boerewors","p":"R25"},
+        {"n":"Portion of Mash","p":"R22"},
+     ]},
+   ]},
+  {"key":"pizza","name":"Wood Fired Pizza","served":"A 28cm pizza, made with the best quality double zero flour and only the freshest ingredients. All our dough is kneaded daily and pizzas are hand-crafted to give you the best pizza in town.",
+   "groups":[
+     {"head":None,"items":[
+        {"n":"Putting Green","p":"R81","d":"Also known as a margarita. Tomato-based pizza topped with cheese.","t":["Veg"]},
+        {"n":"Pot Bunker","p":"R110","d":"Bacon and feta cheese."},
+        {"n":"Stroke 1","p":"R123","d":"Chorizo slices, salami and your choice of fresh mushrooms or pineapple."},
+        {"n":"Fairway Driver","p":"R129","d":"Margarita pizza topped with bacon, salami and pepperoni."},
+        {"n":"Birdie","p":"R115","d":"Chicken strips, sweet chilli sauce and pineapple."},
+        {"n":"Anchovy","p":"R112","d":"Anchovies, red onions, olives, and basil leaves."},
+        {"n":"Handicap","p":"R112","d":"Topped with ham and pineapple or fresh mushrooms."},
+        {"n":"Hole in One!","p":"R112","d":"For the love of cheese! Topped with mozzarella, cheddar, feta cheese, and parmesan cheese.","t":["Veg"]},
+        {"n":"Eagle Putt","p":"R118","d":"Chicken strips, red onions, BBQ sauce, and fresh mushrooms."},
+        {"n":"In the Woods","p":"R156","d":"Two pizza bases, cream cheese, salami, bacon, feta cheese and sweet chilli sauce. Allow 25 min prep time."},
+        {"n":"Mexican","p":"R128","d":"Mince, peppers, chillies, cherry tomatoes, red onions and garlic.","t":["Spicy"]},
+        {"n":"Bacon, Avo & Feta","p":"R125","d":"Topped with bacon, avocado (seasonal) and feta cheese."},
+        {"n":"St Andrews","p":"R124","d":"BBQ chicken, pineapple and parmesan cheese."},
+        {"n":"Club Champ","p":"R123","d":"Pork belly cubes, bacon & pineapple.","t":["New"]},
+     ]},
+     {"head":"Extra Toppings &mdash; Veg","items":[
+        {"n":"Chilli","p":"R12"},{"n":"Garlic","p":"R9"},{"n":"Pineapple","p":"R13"},{"n":"Mushrooms","p":"R15"},
+        {"n":"Avocado (seasonal)","p":"R19"},{"n":"Caramelised Onions","p":"R16"},{"n":"Jalapeño slices","p":"R12"},
+     ]},
+     {"head":"Extra Toppings &mdash; Dairy","items":[
+        {"n":"Cheese","p":"R22"},{"n":"Feta Cheese","p":"R16"},{"n":"Parmesan Cheese","p":"R16"},
+     ]},
+     {"head":"Extra Toppings &mdash; Meat","items":[
+        {"n":"Bacon","p":"R22"},{"n":"Pepperoni","p":"R22"},{"n":"Salami","p":"R22"},
+     ]},
+   ]},
+  {"key":"kids","name":"Kids Meals","served":None,
+   "groups":[
+     {"head":None,"items":[
+        {"n":"Chicken Strips","p":"R61","d":"Chicken strips coated with panko crumbs and served with fries."},
+        {"n":"Ribs","p":"R69","d":"200g ribs. Served with fries."},
+        {"n":"Viennas","p":"R37","d":"2 viennas served with fries."},
+        {"n":"Chicken Nuggets","p":"R52","d":"5 nuggets served with fries."},
+        {"n":"Kids Cheese Burger","p":"R66","d":"100g burger, slice of cheese, served with fries."},
+        {"n":"Cheese Pizza","p":"R43","d":"Kids size margarita pizza.","t":["Veg"]},
+        {"n":"Pizza & Milkshake Combo","p":"R56","d":"Cheese pizza and any standard milkshake."},
+        {"n":"Toasted Cheese","p":"R38","d":"White or brown bread. Served with fries."},
+     ]},
+     {"head":"Kids Drinks","items":[
+        {"n":"Kids Ice Cream (choc sauce)","p":"R35"},{"n":"Kids Juice (apple / medley / orange)","p":"R22"},
+        {"n":"Kids Milkshake (choc / bubblegum / salted caramel / strawberry)","p":"R27"},
+        {"n":"Kids Speciality Shakes (bar one / nutella / oreo)","p":"R29"},
+     ]},
+   ]},
+  {"key":"sweet","name":"Something Sweet","served":None,
+   "groups":[{"head":None,"items":[
+        {"n":"Waffle","p":"R46","d":"Freshly prepared, served with cream or ice cream and golden caramel syrup.","t":["Veg"]},
+        {"n":"Speciality Waffle's","p":"R52","d":"Freshly prepared with your choice of Nutella, Bar One sauce, or Oreos. Served with cream or ice cream.","t":["Veg"]},
+        {"n":"Ice Cream & Choc Sauce","p":"R41","d":None,"t":["Veg"]},
+        {"n":"Irish Coffee","p":"R49"},
+        {"n":"Don Pedro &mdash; Jameson","p":"R49"},{"n":"Don Pedro &mdash; Kahlua","p":"R41"},{"n":"Don Pedro &mdash; Frangelico","p":"R41"},
+   ]}]},
+  {"key":"drinks","name":"Hot & Cold Drinks","served":None,
+   "groups":[
+     {"head":"Hot Beverages","items":[
+        {"n":"Americano","p":"R27"},{"n":"Cappuccino","p":"R33"},{"n":"Hot Chocolate","p":"R35"},
+        {"n":"Tea","p":"R21"},{"n":"Rooibos Tea","p":"R21"},
+     ]},
+     {"head":"Cold Beverages","items":[
+        {"n":"Coke","p":"R24"},{"n":"Coke Zero","p":"R23"},{"n":"Fanta Orange","p":"R24"},{"n":"Cream Soda","p":"R25"},
+        {"n":"Sprite","p":"R24"},{"n":"Sparletta Raspberry","p":"R25"},{"n":"Appletizer","p":"R33"},{"n":"Grapetizer Red","p":"R33"},
+        {"n":"Peach Ice Tea","p":"R30"},{"n":"Lemon Ice Tea","p":"R30"},{"n":"Red Bull","p":"R42"},{"n":"Rock Shandy","p":"R42"},
+        {"n":"Steelworx","p":"R46"},
+     ]},
+     {"head":"Milkshakes","items":[
+        {"n":"Chocolate","p":"R34"},{"n":"Salted Caramel","p":"R35"},{"n":"Strawberry","p":"R34"},{"n":"Nutella","p":"R38"},
+        {"n":"Bubblegum","p":"R34"},{"n":"Oreo","p":"R38"},{"n":"Coffee Shake","p":"R35"},{"n":"Bar One Shake","p":"R38"},
+     ]},
+     {"head":"Mixers (200ml)","items":[
+        {"n":"Tonic Water","p":"R21"},{"n":"Pink Tonic","p":"R21"},{"n":"Lemonade","p":"R21"},{"n":"Soda Water","p":"R21"},
+        {"n":"Bitter Lemon","p":"R21"},{"n":"Ginger Ale","p":"R21"},{"n":"Tomato Cocktail","p":"R32"},
+     ]},
+     {"head":"Bottled Water (500ml)","items":[{"n":"Still","p":"R19"},{"n":"Sparkling","p":"R19"}]},
+     {"head":"Cordials (per tot)","items":[{"n":"Passion Fruit","p":"R5"},{"n":"Lime","p":"R5"},{"n":"Cola Tonic","p":"R5"}]},
+     {"head":"Fruit Juice","items":[{"n":"Orange","p":"R26"},{"n":"Tropical","p":"R26"},{"n":"Cranberry","p":"R26"}]},
+   ]},
+  {"key":"wine","name":"Wine & Cocktails","served":None,
+   "groups":[
+     {"head":"Red Wine","items":[
+        {"n":"Nederberg Cabernet Sauvignon","p":"R174"},{"n":"Nederburg Baronne","p":"R174"},
+        {"n":"Van Loveren River Red Shiraz","p":"R136"},{"n":"Durbanville Hills Merlot","p":"R169"},
+        {"n":"Chateau Libertas","p":"R164"},
+     ]},
+     {"head":"White Wine","items":[
+        {"n":"The Beachhouse Sauvignon Blanc","p":"R152"},{"n":"Van Lovern Blanc de Blanc","p":"R138"},
+        {"n":"2 Ocean Sauvignon Blanc","p":"R134"},{"n":"Durbanville Sauvignon Blanc","p":"R169"},
+        {"n":"Boschendal Blanc de Noir","p":"R165"},{"n":"Drosthy Hof Extra Light","p":"R125"},
+     ]},
+     {"head":"Sparkling Wine","items":[
+        {"n":"JC le Roux la Domain","p":"R172"},{"n":"JC le Roux La Chanson","p":"R172"},
+        {"n":"JC le Roux Sauvignon Blanc 250ml","p":"R38"},
+     ]},
+     {"head":"Wine by the Glass","items":[{"n":"Dry Red","p":"R30"},{"n":"Dry White","p":"R30"}]},
+     {"head":"Cocktails","items":[{"n":"Mimosa","p":"R59"},{"n":"Susan","p":"R74"},{"n":"Double Bloody Mary","p":"R69"}]},
+   ]},
+  {"key":"beer","name":"Beer & Alcohol","served":None,
+   "groups":[
+     {"head":"Beer","items":[
+        {"n":"Castle Lager","p":"R32"},{"n":"Castle Lite","p":"R33"},{"n":"Black Label","p":"R33"},{"n":"Hansa","p":"R32"},
+        {"n":"Heineken","p":"R37"},{"n":"Heineken 00","p":"R37"},{"n":"Amstel Radler","p":"R33"},{"n":"Guinness","p":"R49"},
+        {"n":"Windhoek Draught (440ml)","p":"R42"},{"n":"Windhoek Lager (440ml)","p":"R42"},{"n":"Flying Fish","p":"R33"},
+        {"n":"Corona Zero","p":"R38"},
+     ]},
+     {"head":"Draught on Tap (500ml)","items":[
+        {"n":"Stella Artois","p":"R47"},{"n":"Castle Light","p":"R44"},{"n":"Black Label","p":"R44"},{"n":"Fore Lager","p":"R44"},
+     ]},
+     {"head":"Ciders","items":[
+        {"n":"Hunters Dry","p":"R38"},{"n":"Hunters Gold","p":"R38"},{"n":"Hunters Extreme","p":"R39"},{"n":"Red Square","p":"R43"},
+        {"n":"Savanna Dry","p":"R39"},{"n":"Savanna Light","p":"R39"},{"n":"Savanna Non-Alc.","p":"R39"},
+        {"n":"Belgravia Dark Cherry","p":"R39"},{"n":"Belgravia Dry Lemon","p":"R39"},
+        {"n":"Caribbean Twist Strawberry Watermelon","p":"R39"},{"n":"Caribbean Twist Pina Colada","p":"R39"},
+     ]},
+     {"head":"Brandy","items":[{"n":"Richelieu","p":"R19"},{"n":"Klipdrift Premium","p":"R21"},{"n":"Olof Bergh","p":"R18"}]},
+     {"head":"Whiskey","items":[
+        {"n":"J&B","p":"R22"},{"n":"Bells","p":"R23"},{"n":"Jameson","p":"R34"},{"n":"Scottish Leader","p":"R21"},
+        {"n":"Johnny Black","p":"R36"},{"n":"Johnny Red","p":"R25"},{"n":"Jack Daniels","p":"R31"},
+     ]},
+     {"head":"Rum","items":[{"n":"Captain Morgan Dark","p":"R23"},{"n":"Red Heart","p":"R22"},{"n":"Spiced Gold","p":"R21"},{"n":"Tipo Tinto","p":"R22"}]},
+   ]},
+  {"key":"spirits","name":"Vodka, Gin & Shooters","served":None,
+   "groups":[
+     {"head":"Vodka","items":[{"n":"Smirnoff 1818","p":"R20"},{"n":"Count Pushkin","p":"R19"}]},
+     {"head":"Gin","items":[{"n":"Gordons Gin","p":"R21"},{"n":"Strettons Triple Berry","p":"R23"},{"n":"Malfy","p":"R38"}]},
+     {"head":"Liqueurs & Shooters","items":[
+        {"n":"Crunchy","p":"R28"},{"n":"La Vodka Caramel","p":"R28"},{"n":"Poncho's","p":"R32"},{"n":"Jagermeister","p":"R30"},
+        {"n":"Strawberry Lips","p":"R20"},{"n":"Po-10-C","p":"R22"},{"n":"Blow Job","p":"R27"},{"n":"Oestertjie","p":"R28"},
+        {"n":"Jose Cuervo Gold","p":"R31"},{"n":"Zoerdoef","p":"R22"},{"n":"Kleiner Keller","p":"R38"},{"n":"4* Jager Bomb","p":"R124"},
+     ]},
+   ]},
+]
+
+with open(os.path.join(OUT, "menu-data.json"), "w") as f:
+    json.dump(MENU, f)
+
+print("menu categories:", len(MENU))
